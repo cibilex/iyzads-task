@@ -3,4 +3,8 @@ completed: İşlem başarıyla tamamlandı.
 registered: Kayıt işlemi başarıyla tamamlandı.
 logged_in: Başarılı şekilde giriş yapıldı.
 logged_out: Başarılı şekilde çıkış yapıldı.
+created: '$t({property}) başarıyla oluşturuldu.'
+updated: '$t({property}) başarıyla güncellendi.'
+deleted: "$t({property}) başarıyla silindi."
+
 

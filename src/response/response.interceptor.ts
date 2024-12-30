@@ -102,8 +102,6 @@ export class ResponseInterceptor<T>
   }
 
   errorHandler(err: any, res: FastifyReply) {
-    console.log(err, 'err');
-
     const reply = this.getErrorResponse(err);
     const response = {
       ...reply,
@@ -117,6 +115,7 @@ export class ResponseInterceptor<T>
   private responseHandler(data: any | Response, res: FastifyReply) {
     const isInstance = typeof data === 'object' && 'message' in data;
     const i18n = I18nContext.current();
+
     return {
       data: isInstance ? data.data : data,
       status: res.statusCode,

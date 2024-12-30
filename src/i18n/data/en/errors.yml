@@ -17,3 +17,4 @@ not_found_with: 'No $t({property}) found with entered inputs.'
 not_verified: The user is not verified yet.
 already_logged: The user is already logged in.
 passwordIsNotValid: Entered password is not valid.
+max_permission: 'Up to 32 permissions can be added for a page.'

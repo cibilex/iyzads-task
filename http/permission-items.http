@@ -1,0 +1,33 @@
+@baseURL = http://localhost:2313/api/v1/permission-item
+
+
+GET {{baseURL}}
+Content-Type: application/json
+
+
+
+##########
+POST {{baseURL}}/2
+Content-Type: application/json
+
+{
+    "title":"woasras21xld22xxxxasdasdsad",
+    "priority":1
+}
+
+####
+PUT {{baseURL}}/10/111
+Content-Type: application/json
+
+{
+    "title":"world asdasd",
+    "priority":1120
+
+}
+
+
+####
+DELETE {{baseURL}}/2/12
+Content-Type: application/json
+
+

@@ -1,0 +1,27 @@
+@baseURL = http://localhost:2313/api/v1/permissions
+
+
+GET {{baseURL}}
+Content-Type: application/json
+
+
+
+##########
+POST {{baseURL}}
+Content-Type: application/json
+
+{
+    "title":" world",
+    "priority":10
+
+}
+
+####
+PUT {{baseURL}}/5
+Content-Type: application/json
+
+{
+    "title":"world 1x2",
+    "priority":1120
+
+}

@@ -1,7 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserT } from './user.interface';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { EntityManager, Not, Repository } from 'typeorm';
@@ -44,26 +42,25 @@ export class UserService {
     { username, birthYear, phone, country }: CreateUserDto,
     hashedPassword: string,
   ) {
-    return this.entityManager.transaction(async (trx) => {
-      const user = await trx.insert(
-        User,
-        this.userRepository.create({
-          username,
-          password: hashedPassword,
-          birthYear,
-        }),
-      );
-
-      await trx.insert(
-        Setting,
-        this.settingRepository.create({
-          phone,
-          country,
-          userId: user.identifiers[0]!.id as number,
-        }),
-      );
-      return new Response(true, 'success.registered');
-    });
+    // return this.entityManager.transaction(async (trx) => {
+    //   const user = await trx.insert(
+    //     User,
+    //     this.userRepository.create({
+    //       username,
+    //       password: hashedPassword,
+    //       birthYear,
+    //     }),
+    //   );
+    //   await trx.insert(
+    //     Setting,
+    //     this.settingRepository.create({
+    //       phone,
+    //       country,
+    //       userId: user.identifiers[0]!.id as number,
+    //     }),
+    //   );
+    //   return new Response(true, 'success.registered');
+    // });
   }
 
   async login({ username, password }: LoginUserDto) {

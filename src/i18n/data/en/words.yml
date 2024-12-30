@@ -1,3 +1,3 @@
-image: image
 user: user
-email: email
+permission: permission
+permission_page: permission page

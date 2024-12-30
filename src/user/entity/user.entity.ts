@@ -1,13 +1,7 @@
 import { BaseEntity } from 'src/entity/base.entity';
-import {
-  Column,
-  Entity,
-  Index,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, Index, OneToOne } from 'typeorm';
 import { Setting } from './setting.entity';
-import { Exclude, Transform } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -28,11 +22,8 @@ export class User extends BaseEntity {
   })
   password: string;
 
-  @Column({
-    type: 'smallint',
-    name: 'birth_year',
-  })
-  birthYear: number;
+  @Column('jsonb')
+  permissions: Record<string, number>;
 
   @OneToOne(() => Setting, (setting) => setting.user)
   setting: Setting;

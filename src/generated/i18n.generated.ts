@@ -25,13 +25,17 @@ export type I18nTranslations = {
         "not_verified": string;
         "already_logged": string;
         "passwordIsNotValid": string;
+        "max_permission": string;
     };
     "success": {
-        "confirmed": string;
         "completed": string;
         "registered": string;
         "logged_in": string;
         "logged_out": string;
+        "created": string;
+        "updated": string;
+        "deleted": string;
+        "confirmed": string;
     };
     "validation": {
         "min": string;
@@ -54,9 +58,9 @@ export type I18nTranslations = {
         "is_not_empty": string;
     };
     "words": {
-        "image": string;
         "user": string;
-        "email": string;
+        "permission": string;
+        "permission_page": string;
     };
 };
 /* prettier-ignore */

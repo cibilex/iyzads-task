@@ -17,3 +17,4 @@ not_found_with: 'Girilen bilgilerle $t({property}) bulunamadı.'
 not_verified: Kullanıcı henüz doğrulanmamış.
 already_logged: Kullanıcı zaten oturum açmış durumda.
 passwordIsNotValid: Girilen şifre hatalı.
+max_permission: 'Bir sayfaya en fazla 32 izin eklenebilir.'

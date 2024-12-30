@@ -9,6 +9,8 @@ import { AuthGuard } from './auth/auth.guard';
 import { DbModule } from './db/db.module';
 import { I18nModule } from './i18n/i18n.module';
 import { RedisModule } from './redis/redis.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { PermissionItemModule } from './permission-item/permission-item.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { RedisModule } from './redis/redis.module';
     I18nModule,
     UserModule,
     RedisModule,
+    PermissionsModule,
+    PermissionItemModule,
   ],
   controllers: [AppController],
   providers: [
