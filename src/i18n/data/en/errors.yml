@@ -1,0 +1,19 @@
+400: 'Bad Request - The request is invalid due to client input errors.'
+401: 'Unauthorized - Access is denied due to missing or invalid credentials.'
+403: 'Forbidden - The server refuses to fulfill the request.'
+404: 'Not Found - The requested resource could not be found on the server.'
+405: 'Method Not Allowed - The method specified in the request is not allowed.'
+408: 'Request Timeout - The server timed out waiting for the request.'
+500: 'Internal Server Error - The server encountered an unexpected situation.'
+503: 'Service Unavailable - The server is currently unable to handle the request.'
+already_exists: '$t({property}) already exists. Please change $t({property}) and try again.'
+already_exists_with: '$t({property}) already exists with entered $t({property}). Please change $t({property}) and try again.'
+max_tags: 'Up to {count} tags can be added.'
+token_expired: Token has expired.
+not_found: '$t({property}) not found.'
+already_verified: The user has already been verified.
+no_code: No active $t({property}) codes are currently available.
+not_found_with: 'No $t({property}) found with entered inputs.'
+not_verified: The user is not verified yet.
+already_logged: The user is already logged in.
+passwordIsNotValid: Entered password is not valid.

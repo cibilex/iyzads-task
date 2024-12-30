@@ -1,0 +1,19 @@
+400: 'Hatalı İstek - İstemci girdi hataları nedeniyle istek geçersiz.'
+401: 'Yetkisiz - Erişim, eksik veya geçersiz kimlik bilgileri nedeniyle reddedildi.'
+403: 'Yasak - Sunucu isteği yerine getirmeyi reddeder.'
+404: 'Bulunamadı - İstenen kaynak sunucuda bulunamadı.'
+405: 'İzin Verilmeyen Yöntem - İsteğe belirtilen yöntem izin verilmez.'
+408: 'İstek Zaman Aşımı - Sunucu isteği beklerken zaman aşımına uğradı.'
+500: 'Dahili Sunucu Hatası - Sunucu beklenmeyen bir durumla karşılaştı.'
+503: 'Hizmet Kullanılamıyor - Sunucu şu anda isteği işleyemiyor.'
+already_exists: '$t({property}) zaten mevcut. Lütfen $t({property}) değerini değiştirin ve tekrar deneyin.'
+already_exists_with: 'Girilen $t({property}) ile birlikte $t({property}) zaten mevcut. Lütfen $t({property}) değerini değiştirin ve tekrar deneyin.'
+max_tags: 'En fazla {count} etiket eklenebilir.'
+token_expired: Token süresi dolmuş.
+not_found: '$t({property}) bulunamadı.'
+already_verified: Kullanıcı zaten doğrulanmış durumda.
+no_code: Şu anda aktif $t({property}) kodu bulunmamaktadır.
+not_found_with: 'Girilen bilgilerle $t({property}) bulunamadı.'
+not_verified: Kullanıcı henüz doğrulanmamış.
+already_logged: Kullanıcı zaten oturum açmış durumda.
+passwordIsNotValid: Girilen şifre hatalı.

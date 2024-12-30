@@ -1,0 +1,54 @@
+@baseURL = http://localhost:2313/api/v1/
+
+
+GET {{baseURL}}
+Content-Type: application/json
+
+
+
+##########
+GET {{baseURL}}user?username=1
+Content-Type: application/json
+
+
+######
+POST {{baseURL}}user
+Content-Type: application/json
+
+{
+    "username":"aaxsax",
+    "password":"hiworldsad",
+    "birthYear":1999,
+    "phone":"11111111111",
+    "country":"EN"
+}
+
+
+######
+POST {{baseURL}}user/login
+Content-Type: application/json
+Authorization: Bearer cibilex
+
+{
+    "username":"sssa",
+    "password":"hiwasorldsad"
+}
+
+##########
+GET {{baseURL}}orders
+Content-Type: application/json
+
+
+######
+POST {{baseURL}}orders
+Content-Type: application/json
+Authorization: Bearer cibilex
+
+{
+    "title":"cibilexxacasds",
+    "price":12,
+    "tax":2
+}
+
+
+
