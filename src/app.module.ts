@@ -13,6 +13,7 @@ import { PermissionsModule } from './permissions/permissions.module';
 import { PermissionItemModule } from './permission-item/permission-item.module';
 import { BookstoreModule } from './bookstore/bookstore.module';
 import { BookModule } from './book/book.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { BookModule } from './book/book.module';
     PermissionItemModule,
     BookstoreModule,
     BookModule,
+    InventoryModule,
   ],
   controllers: [AppController],
   providers: [

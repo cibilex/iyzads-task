@@ -1,4 +1,4 @@
-@baseURL = http://localhost:2313/api/v1/bookstore
+@baseURL = http://localhost:2313/api/v1/inventory
 @token=60717570d725a90bc87eff4a1f4f0dac490e532546def7ce9534770fa9dcefc3d20ca3c43767f5e6c75479c92b5befaa
 
 GET {{baseURL}}
@@ -7,14 +7,12 @@ Authorization: Bearer {{token}}
 
 
 ##########
-POST {{baseURL}}
+POST {{baseURL}}/3/2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "title":"İstanbul kitapevi",
-    "country":"TR",
-    "city":"İstanbul"
+    "quantity":10
 }
 
 ####
@@ -22,4 +20,14 @@ Authorization: Bearer {{token}}
 DELETE {{baseURL}}/1
 Content-Type: application/json
 Authorization: Bearer {{token}}
+
+####
+
+PUT {{baseURL}}/1/1/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "quantity":1
+}
 
