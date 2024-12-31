@@ -1,0 +1,26 @@
+@baseURL = http://localhost:2313/api/v1/book
+@token=60717570d725a90bc87eff4a1f4f0dac490e532546def7ce9534770fa9dcefc3d20ca3c43767f5e6c75479c92b5befaa
+
+GET {{baseURL}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+##########
+POST {{baseURL}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title":"Sapxiens",
+    "description":"Sapiens description",
+    "publicationDate":1735653030,
+    "price":23
+}
+
+####
+
+DELETE {{baseURL}}/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

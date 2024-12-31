@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { BookStore } from './entity/bookstore.entity';
 import { FindOptionsWhere, Not, Repository } from 'typeorm';
-import { CreateBookStoreDto } from './dto/create-bookstore.dto';
 import { CommonTableStatuses } from 'src/typings/common';
 import { GlobalException } from 'src/global/global.filter';
-import { Response } from 'src/helpers/utils';
+import { convertPrice, Response } from 'src/helpers/utils';
+import { Book } from './entity/book.entity';
+import { CreateBookDto } from './dto/create-book.dto';
 
 @Injectable()
-export class BookstoreService {
+export class BookService {
   constructor(
-    @InjectRepository(BookStore)
-    private readonly bookStoreRepository: Repository<BookStore>,
+    @InjectRepository(Book)
+    private readonly bookRepository: Repository<Book>,
   ) {}
 
   async list() {
-    return this.bookStoreRepository.find({
+    return this.bookRepository.find({
       where: {
         status: Not(CommonTableStatuses.DELETED),
       },
@@ -25,54 +25,54 @@ export class BookstoreService {
     });
   }
 
-  async create({ title, country, city }: CreateBookStoreDto) {
+  async create({ title, description, price, publicationDate }: CreateBookDto) {
     await this.throwIfExists({ title });
-    const bookstore = await this.bookStoreRepository.save(
-      this.bookStoreRepository.create({
+    const bookstore = await this.bookRepository.save(
+      this.bookRepository.create({
         title,
-        country,
-        city,
+        description,
+        price: convertPrice(price),
+        publicationDate,
       }),
     );
     return new Response(bookstore, 'success.created', {
-      property: 'words.bookstore',
+      property: 'words.book',
     });
   }
 
   async delete(id: number) {
-    const result = await this.bookStoreRepository.update(
+    const result = await this.bookRepository.update(
       { id, status: Not(CommonTableStatuses.DELETED) },
-      this.bookStoreRepository.create({
+      this.bookRepository.create({
         status: CommonTableStatuses.DELETED,
       }),
     );
     if (!result.affected) {
       throw new GlobalException('errors.not_found', {
         args: {
-          property: 'words.bookstore',
+          property: 'words.book',
         },
       });
     }
-    // delete books
 
     return new Response(true, 'success.deleted', {
-      property: 'words.bookstore',
+      property: 'words.book',
     });
   }
 
-  private exists(where: FindOptionsWhere<BookStore>) {
-    return this.bookStoreRepository.existsBy({
+  private exists(where: FindOptionsWhere<Book>) {
+    return this.bookRepository.existsBy({
       status: Not(CommonTableStatuses.DELETED),
       ...where,
     });
   }
 
-  private async throwIfExists(where: FindOptionsWhere<BookStore>) {
+  private async throwIfExists(where: FindOptionsWhere<Book>) {
     const exists = await this.exists(where);
     if (exists) {
       throw new GlobalException('errors.already_exists', {
         args: {
-          property: 'words.bookstore',
+          property: 'words.book',
         },
       });
     }

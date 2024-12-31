@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/entity/base.entity';
 import { Column, Entity, Index } from 'typeorm';
 
-@Entity()
+@Entity('bookstores')
 export class BookStore extends BaseEntity {
   @Index()
   @Column({

@@ -23,6 +23,10 @@ export const getUnusedBitValue = (list: number[]) => {
   throw new GlobalException('errors.max_permission');
 };
 
+export const convertPrice = (price: string | number) => {
+  return parseInt((parseFloat(price.toString()) * 100).toFixed(0));
+};
+
 export const createToken = (secret: HashOptions, payload: string) =>
   createHash('sha384', secret).update(payload).digest('hex');
 
