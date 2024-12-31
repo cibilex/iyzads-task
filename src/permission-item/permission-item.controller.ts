@@ -11,6 +11,7 @@ import {
 import { PermissionItemService } from './permission-item.service';
 import { CreatePermissionItemDto } from './dto/create-permission-item.dto';
 import { Public } from 'src/public/public.decorator';
+import { UpdatePermissionItemDto } from './dto/update-permission-item.dto';
 
 @Public()
 @Controller('permission-item')
@@ -34,7 +35,7 @@ export class PermissionItemController {
   updatePermission(
     @Param('permissionId', ParseIntPipe) permissionId: number,
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: CreatePermissionItemDto,
+    @Body() body: UpdatePermissionItemDto,
   ) {
     return this.permissionItemService.update(permissionId, id, body);
   }

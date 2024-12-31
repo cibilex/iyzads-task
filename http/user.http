@@ -9,7 +9,7 @@ POST {{baseURL}}/login
 Content-Type: application/json
 
 {
-    "username":"iyzads_admin",
+    "username":"asd213",
     "password":"ash8los2bahKauxae3ieth3shaarahc6",
     "rememberMe":false
 }

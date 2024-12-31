@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { RedisInitService } from './redis-init.service';
 import { ConfigService } from '@nestjs/config';
 import { RedisHashService } from './redis-hashes.service';
@@ -9,18 +9,17 @@ import {
   RedisKeys,
 } from './redis.interface';
 import { ModuleRef } from '@nestjs/core';
-import { PermissionsService } from 'src/permissions/permissions.service';
 import { createToken, formatPermissions } from 'src/helpers/utils';
-import { User } from 'src/user/entity/user.entity';
 import { toUnixTime } from 'src/helpers/date';
-import { EntityManager, LessThan, Not } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { UserVerification } from 'src/user/entity/user-verification.entity';
 import { CommonTableStatuses } from 'src/typings/common';
 import { UserTypes } from 'src/user/user.interface';
 import { RedisStringService } from './redis-strings.service';
+import { Permission } from 'src/permissions/entity/permission.entity';
 
 @Injectable()
-export class RedisService {
+export class RedisService implements OnModuleInit {
   constructor(
     private readonly redisInitService: RedisInitService,
     private readonly redisHashService: RedisHashService,
@@ -154,11 +153,23 @@ export class RedisService {
     return this.getPermissions();
   }
 
-  async setPermissions() {
-    const permissionService = this.moduleRef.get(PermissionsService, {
-      strict: false,
-    });
-    const perms = await permissionService.list(true);
+  async getAllPermissions(manager: EntityManager) {
+    return manager
+      .createQueryBuilder(Permission, 'p')
+      .leftJoinAndSelect('p.permissionItems', 'pi', 'pi.status != :piStatus', {
+        piStatus: CommonTableStatuses.DELETED,
+      })
+      .where('p.status != :status', {
+        status: CommonTableStatuses.DELETED,
+      })
+      .select(['p.id', 'p.title', 'pi.id', 'pi.title', 'pi.value'])
+      .orderBy('p.createdAt', 'DESC')
+      .getMany();
+  }
+
+  async setPermissions(manager?: EntityManager) {
+    const trx = manager || this.entityManager;
+    const perms = await this.getAllPermissions(trx);
 
     const formattedPermissions = formatPermissions(perms);
 
@@ -168,5 +179,10 @@ export class RedisService {
       +this.configService.get('REDIS.REDIS_COMMON_TTL', { infer: true }),
     );
     return true;
+  }
+
+  async onModuleInit() {
+    await this.setPermissions();
+    console.log('Redis permissions updated');
   }
 }

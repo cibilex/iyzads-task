@@ -11,7 +11,7 @@ POST {{baseURL}}
 Content-Type: application/json
 
 {
-    "title":"bookstore",
+    "title":"last",
     "priority":1
 }
 
@@ -27,6 +27,6 @@ Content-Type: application/json
 
 ###
 
-DELETE {{baseURL}}/2
+DELETE {{baseURL}}/5
 Content-Type: application/json
 

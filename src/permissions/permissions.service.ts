@@ -1,20 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Permission } from './entity/permission.entity';
 import { EntityManager, FindOptionsWhere, Not, Repository } from 'typeorm';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { GlobalException } from 'src/global/global.filter';
-import { groupArr, Response } from 'src/helpers/utils';
+import { getUnusedBitValue, groupArr, Response } from 'src/helpers/utils';
 import { CommonTableStatuses } from 'src/typings/common';
 import { User } from 'src/user/entity/user.entity';
 import { PermissionItem } from 'src/permission-item/entity/permission-item.entity.dto';
-
+import defaultPermissions from './data/permissions.data';
+import { UpdatePermissionDto } from './dto/update-permission.dto';
+import { RedisService } from 'src/redis/redis.service';
 @Injectable()
-export class PermissionsService {
+export class PermissionsService implements OnModuleInit {
   constructor(
     @InjectRepository(Permission)
     private readonly permissionRepository: Repository<Permission>,
+    @InjectRepository(PermissionItem)
+    private readonly permissionItemRepository: Repository<PermissionItem>,
     private readonly entityManager: EntityManager,
+    private readonly redisService: RedisService,
   ) {}
 
   async list(dense?: boolean) {
@@ -59,11 +64,16 @@ export class PermissionsService {
   async create({ title, priority }: CreatePermissionDto) {
     await this.throwIfExists({ title });
 
-    const permission = await this.permissionRepository.save(
-      this.permissionRepository.create({ title, priority }),
-    );
+    const result = await this.entityManager.transaction(async (trx) => {
+      const permission = await trx.save(
+        this.permissionRepository.create({ title, priority }),
+      );
 
-    return new Response(permission, 'success.created', {
+      await this.redisService.setPermissions(trx);
+      return permission;
+    });
+
+    return new Response(result, 'success.created', {
       property: 'words.permission_page',
     });
   }
@@ -109,7 +119,7 @@ export class PermissionsService {
     });
   }
 
-  async update(id: number, { title, priority }: CreatePermissionDto) {
+  async update(id: number, { priority }: UpdatePermissionDto) {
     const exists = await this.permissionRepository.findOneBy({
       status: Not(CommonTableStatuses.DELETED),
       id,
@@ -122,11 +132,9 @@ export class PermissionsService {
       });
     }
 
-    await this.throwIfExists({ title, id: Not(id) });
-
     const permission = await this.permissionRepository.update(
       id,
-      this.permissionRepository.create({ title, priority }),
+      this.permissionRepository.create({ priority }),
     );
     if (!permission.affected) {
       throw new GlobalException('errors.not_found', {
@@ -159,7 +167,7 @@ export class PermissionsService {
     }
   }
 
-  private async modifyExistingUsers(
+  async modifyExistingUsers(
     trx: EntityManager,
     payload: { val?: number; page: string },
     del = false,
@@ -200,5 +208,55 @@ export class PermissionsService {
       }
       await Promise.all(promises);
     }
+
+    await this.redisService.setPermissions(trx);
+  }
+
+  async onModuleInit() {
+    await this.entityManager.transaction(async (trx) => {
+      for (const title of Object.keys(defaultPermissions)) {
+        let page = await trx.findOneBy(Permission, { title });
+        if (!page) {
+          page = await trx.save(
+            this.permissionRepository.create({
+              title,
+            }),
+          );
+        }
+
+        const permissions = (defaultPermissions as Record<string, string[]>)[
+          title
+        ];
+
+        const list = await trx.find(PermissionItem, {
+          select: {
+            value: true,
+          },
+          where: {
+            status: Not(CommonTableStatuses.DELETED),
+            permissionId: page.id,
+          },
+        });
+
+        for (const permission of permissions) {
+          const exists = await trx.existsBy(PermissionItem, {
+            title: permission,
+            permissionId: page.id,
+          });
+          if (!exists) {
+            const value = getUnusedBitValue(list.map((cell) => cell.value));
+
+            await trx.save(
+              this.permissionItemRepository.create({
+                title: permission,
+                permissionId: page.id,
+                value,
+              }),
+            );
+          }
+        }
+      }
+    });
+    console.info('permissions initialized');
   }
 }

@@ -1,10 +1,11 @@
 import { Book } from 'src/book/entity/book.entity';
 import { BookStore } from 'src/bookstore/entity/bookstore.entity';
 import { BaseEntity } from 'src/entity/base.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('inventories')
 export class Inventory extends BaseEntity {
+  @Index()
   @Column()
   quantity: number;
 

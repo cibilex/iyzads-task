@@ -18,7 +18,7 @@ export class PermissionItem extends BaseEntity {
   @Column({ nullable: false, name: 'permission_id' })
   permissionId: number;
 
-  @ManyToOne(() => Permission, (permission) => permission.permissionItems)
+  @ManyToOne(() => Permission)
   @JoinColumn({ name: 'permission_id' })
   permission: Partial<Permission>;
 }

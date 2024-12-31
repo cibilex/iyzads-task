@@ -7,11 +7,11 @@ Content-Type: application/json
 
 
 ##########
-POST {{baseURL}}/2
+POST {{baseURL}}/5
 Content-Type: application/json
 
 {
-    "title":"create",
+    "title":"hi_dssense",
     "priority":4
 }
 
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 
 ####
-DELETE {{baseURL}}/6/46
+DELETE {{baseURL}}/5/15
 Content-Type: application/json
 
 

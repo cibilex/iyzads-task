@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PermissionItem } from './entity/permission-item.entity.dto';
-import { FindOptionsWhere, Not, Repository } from 'typeorm';
+import { EntityManager, FindOptionsWhere, Not, Repository } from 'typeorm';
 import { CreatePermissionItemDto } from './dto/create-permission-item.dto';
 import { CommonTableStatuses } from 'src/typings/common';
 import { GlobalException } from 'src/global/global.filter';
 import { getUnusedBitValue, Response } from 'src/helpers/utils';
 import { Permission } from 'src/permissions/entity/permission.entity';
+import { UpdatePermissionItemDto } from './dto/update-permission-item.dto';
+import { ModuleRef } from '@nestjs/core';
+import { PermissionsService } from 'src/permissions/permissions.service';
+import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
 export class PermissionItemService {
@@ -15,6 +19,9 @@ export class PermissionItemService {
     private permissionItemRepository: Repository<PermissionItem>,
     @InjectRepository(Permission)
     private readonly permissionRepository: Repository<Permission>,
+    private readonly entityManager: EntityManager,
+    private readonly moduleRef: ModuleRef,
+    private readonly redisService: RedisService,
   ) {}
 
   async list() {
@@ -49,38 +56,77 @@ export class PermissionItemService {
 
     const value = getUnusedBitValue(list.map((cell) => cell.value));
 
-    const permission = await this.permissionItemRepository.save(
-      this.permissionItemRepository.create({
-        title,
-        permissionId,
-        priority,
-        value,
-      }),
-    );
+    const result = await this.entityManager.transaction(async (trx) => {
+      const permission = await trx.save(
+        this.permissionItemRepository.create({
+          title,
+          permissionId,
+          priority,
+          value,
+        }),
+      );
 
-    return new Response(permission, 'success.created', {
+      await this.redisService.setPermissions(trx);
+
+      return permission;
+    });
+
+    return new Response(result, 'success.created', {
       property: 'words.permission',
     });
   }
 
   async delete(permissionId: number, id: number) {
-    const result = await this.permissionItemRepository.update(
-      {
+    const item = await this.permissionItemRepository.findOne({
+      where: {
+        status: Not(CommonTableStatuses.DELETED),
         id,
-        permissionId,
       },
-      this.permissionRepository.create({
-        status: CommonTableStatuses.DELETED,
-      }),
-    );
-    if (!result.affected) {
+      relations: {
+        permission: true,
+      },
+      select: {
+        id: true,
+        permission: {
+          title: true,
+        },
+      },
+    });
+    if (!item || !item.permission || !item.permission.title) {
       throw new GlobalException('errors.not_found', {
         args: {
           property: 'words.permission',
         },
       });
     }
-    // should remove user perms
+
+    await this.entityManager.transaction(async (trx) => {
+      const result = await trx.update(
+        PermissionItem,
+        {
+          id,
+          permissionId,
+        },
+        this.permissionRepository.create({
+          status: CommonTableStatuses.DELETED,
+        }),
+      );
+      if (!result.affected) {
+        throw new GlobalException('errors.not_found', {
+          args: {
+            property: 'words.permission',
+          },
+        });
+      }
+
+      const permissionsService = this.moduleRef.get(PermissionsService, {
+        strict: false,
+      });
+      await permissionsService.modifyExistingUsers(trx, {
+        val: item.value,
+        page: item.permission.title!,
+      });
+    });
 
     return new Response(true, 'success.deleted', {
       property: 'words.permission',
@@ -90,18 +136,16 @@ export class PermissionItemService {
   async update(
     permissionId: number,
     id: number,
-    { title, priority }: CreatePermissionItemDto,
+    { priority }: UpdatePermissionItemDto,
   ) {
     await Promise.all([
       this.throwIfNotExists({ id, permissionId }),
       this.checkPage(permissionId),
     ]);
-    await this.throwIfExists({ title, permissionId, id: Not(id) });
 
     const result = await this.permissionItemRepository.update(
       id,
       this.permissionItemRepository.create({
-        title,
         priority,
       }),
     );
