@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsString,
   Max,
+  MaxLength,
   Min,
   MinLength,
   validateSync,
@@ -19,6 +20,14 @@ class Env {
   @IsNumber()
   @Min(1000)
   PORT: number;
+
+  @IsString()
+  ADMIN_USERNAME: string;
+
+  @IsString()
+  @MinLength(6)
+  @MaxLength(40)
+  ADMIN_PASSWORD: string;
 
   @IsNumber()
   @Min(2)
@@ -114,6 +123,8 @@ export default function (config: Record<string, unknown>) {
     REDIS_ACCESS_TOKEN_SECRET,
     REDIS_ACCESS_TOKEN_REMEMBER_ME_TTL,
     REDIS_ACCESS_TOKEN_TTL,
+    ADMIN_PASSWORD,
+    ADMIN_USERNAME,
   } = parsed;
 
   return {
@@ -121,6 +132,8 @@ export default function (config: Record<string, unknown>) {
     MODE,
     BCRYPT_SALT,
     FALLBACK_LANGUAGE,
+    ADMIN_PASSWORD,
+    ADMIN_USERNAME,
     DB: {
       DB_TYPE,
       DB_PORT,

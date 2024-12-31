@@ -82,13 +82,10 @@ export class PermissionsService {
     const result = await this.entityManager.transaction(async (trx) => {
       const res = await trx.update(
         Permission,
-        {
-          id,
-          status: Not(CommonTableStatuses.DELETED),
-        },
-        {
+        { id, status: Not(CommonTableStatuses.DELETED) },
+        this.permissionRepository.create({
           status: CommonTableStatuses.DELETED,
-        },
+        }),
       );
       if (!res.affected) {
         throw new GlobalException('errors.not_found', {
@@ -98,7 +95,9 @@ export class PermissionsService {
       await trx.update(
         PermissionItem,
         { permissionId: id, status: Not(CommonTableStatuses.DELETED) },
-        { status: CommonTableStatuses.DELETED },
+        trx
+          .getRepository(PermissionItem)
+          .create({ status: CommonTableStatuses.DELETED }),
       );
 
       await this.modifyExistingUsers(trx, { page: page.title }, true);

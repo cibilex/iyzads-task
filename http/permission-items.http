@@ -7,22 +7,20 @@ Content-Type: application/json
 
 
 ##########
-POST {{baseURL}}/1
+POST {{baseURL}}/2
 Content-Type: application/json
 
 {
-    "title":"move",
+    "title":"create",
     "priority":4
 }
 
 ####
-PUT {{baseURL}}/6/46
+PUT {{baseURL}}/2/5
 Content-Type: application/json
 
 {
-    "title":"move",
-    "priority":1120
-
+    "title":"hi_world"
 }
 
 

@@ -1,0 +1,38 @@
+@baseURL = http://localhost:2313/api/v1/user
+
+
+
+
+
+######
+POST {{baseURL}}/login
+Content-Type: application/json
+
+{
+    "username":"lasttesxt",
+    "password":"12321321a",
+    "rememberMe":false
+}
+
+
+######
+POST {{baseURL}}
+Content-Type: application/json
+Authorization:  Bearer 80393cfa99252275b920ff5cdce39958378ae73f621e706a0a8151b2d0df1d44a522156f1d57245e50b1ea668fdf3fd7
+
+{
+    "username":"lasttesxt",
+    "password":"12321321a",
+    "permissions":{
+   "bookstore":["list"]
+    }
+}
+
+
+######
+POST {{baseURL}}/test
+Content-Type: application/json
+Authorization:  Bearer 2df57fa86aabe0c3b28292619b842a0f243262f046c74883759c09ba1827dbbb730dcdeac763789da3c9ac8f9d38abd2
+
+{
+}

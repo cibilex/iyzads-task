@@ -16,12 +16,15 @@ import { toUnixTime } from 'src/helpers/date';
 import { EntityManager, LessThan, Not } from 'typeorm';
 import { UserVerification } from 'src/user/entity/user-verification.entity';
 import { CommonTableStatuses } from 'src/typings/common';
+import { UserTypes } from 'src/user/user.interface';
+import { RedisStringService } from './redis-strings.service';
 
 @Injectable()
 export class RedisService {
   constructor(
     private readonly redisInitService: RedisInitService,
     private readonly redisHashService: RedisHashService,
+    private readonly redisStringService: RedisStringService,
     private readonly configService: ConfigService<EnvType, true>,
     private readonly moduleRef: ModuleRef,
     private readonly entityManager: EntityManager,
@@ -32,16 +35,16 @@ export class RedisService {
   }
 
   async getAccessToken(token: string): Promise<RedisAccessToken | false> {
-    const user = await this.redisHashService.hgetall<RedisAccessToken>(
+    const user = await this.redisStringService.get(
       this.getKey(RedisKeys.ACCESS_TOKEN, token),
     );
     if (user) {
-      return user;
+      return JSON.parse(user) as RedisAccessToken;
     }
 
     const userToken = await this.entityManager
       .createQueryBuilder(UserVerification, 'uv')
-      .leftJoinAndSelect(User, 'u', 'u.status = :uStatus', {
+      .leftJoinAndSelect('uv.user', 'u', 'u.status = :uStatus', {
         uStatus: CommonTableStatuses.ACTIVE,
       })
       .where('uv.token = :token', {
@@ -50,19 +53,32 @@ export class RedisService {
       .andWhere('uv.status = :uvStatus', {
         uvStatus: CommonTableStatuses.ACTIVE,
       })
-      .select(['uv.expiredAt', 'uv.createdAt', 'u.id', 'u.createdAt', 'u.type'])
+      .select([
+        'uv.expiredAt',
+        'uv.createdAt',
+        'u.id',
+        'u.createdAt',
+        'u.permissions',
+        'u.type',
+      ])
       .getOne();
-    if (
-      !userToken ||
-      !userToken.user ||
-      (userToken.expiredAt + userToken.createdAt) * 1000 - Date.now() <= 0
-    ) {
+    if (!userToken || userToken.expiredAt < Date.now()) {
       return false;
     }
 
-    const { id, permissions, createdAt } = userToken.user;
+    const { id, permissions, createdAt, type } = userToken.user;
 
-    await this.setAccessToken({ id, createdAt, permissions });
+    await this.insertToken(
+      userToken.token,
+      {
+        userId: id,
+        createdAt,
+        permissions,
+        userType: type,
+        rememberMe: userToken.rememberMe,
+      },
+      Math.round(userToken.expiredAt - Date.now() / 1000),
+    );
 
     return this.getAccessToken(token);
   }
@@ -72,7 +88,13 @@ export class RedisService {
       id,
       createdAt,
       permissions,
-    }: { id: number; createdAt: number; permissions: Record<string, number> },
+      type,
+    }: {
+      id: number;
+      createdAt: number;
+      type: UserTypes;
+      permissions: Record<string, number>;
+    },
     rememberMe = false,
   ) {
     const ttl = this.configService.get(
@@ -94,7 +116,7 @@ export class RedisService {
     return this.entityManager.transaction(async (trx) => {
       await trx.save(
         trx.getRepository(UserVerification).create({
-          expiredAt: Math.floor(ttl / 1000),
+          expiredAt: Math.round(ttl + Date.now() / 1000),
           userId,
           token,
           rememberMe,
@@ -106,23 +128,28 @@ export class RedisService {
         permissions,
         createdAt,
         rememberMe,
+        userType: type,
       };
-
-      const redisKey = this.getKey(RedisKeys.ACCESS_TOKEN, token);
-      await this.redisHashService.hmset(redisKey, payload);
-      await this.redisInitService.expire(redisKey, ttl);
+      await this.insertToken(token, payload, ttl);
 
       return token;
     });
   }
 
+  private insertToken(token: string, payload: RedisAccessToken, ttl: number) {
+    const redisKey = this.getKey(RedisKeys.ACCESS_TOKEN, token);
+    return this.redisStringService.set(redisKey, JSON.stringify(payload), ttl);
+  }
+
   async getPermissions(): Promise<RedisAllPermissions> {
-    const permissions = this.redisHashService.hgetall<RedisAllPermissions>(
+    const permissions = await this.redisStringService.get(
       RedisKeys.ALL_PERMISSIONS,
     );
+
     if (permissions) {
-      return permissions;
+      return JSON.parse(permissions) as RedisAllPermissions;
     }
+
     await this.setPermissions();
     return this.getPermissions();
   }
@@ -135,13 +162,10 @@ export class RedisService {
 
     const formattedPermissions = formatPermissions(perms);
 
-    await this.redisHashService.hmset(
+    await this.redisStringService.set(
       RedisKeys.ALL_PERMISSIONS,
-      formattedPermissions,
-    );
-    await this.redisInitService.expire(
-      RedisKeys.ALL_PERMISSIONS,
-      this.configService.get('REDIS.REDIS_COMMON_TTL', { infer: true }),
+      JSON.stringify(formattedPermissions),
+      +this.configService.get('REDIS.REDIS_COMMON_TTL', { infer: true }),
     );
     return true;
   }

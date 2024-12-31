@@ -69,9 +69,9 @@ export class PermissionItemService {
         id,
         permissionId,
       },
-      {
+      this.permissionRepository.create({
         status: CommonTableStatuses.DELETED,
-      },
+      }),
     );
     if (!result.affected) {
       throw new GlobalException('errors.not_found', {
@@ -97,10 +97,13 @@ export class PermissionItemService {
     ]);
     await this.throwIfExists({ title, permissionId, id: Not(id) });
 
-    const result = await this.permissionItemRepository.update(id, {
-      title,
-      priority,
-    });
+    const result = await this.permissionItemRepository.update(
+      id,
+      this.permissionItemRepository.create({
+        title,
+        priority,
+      }),
+    );
     if (!result.affected) {
       throw new GlobalException('errors.not_found', {
         args: {

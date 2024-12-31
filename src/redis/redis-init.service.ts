@@ -16,7 +16,6 @@ export class RedisInitService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  // Example common method (you can add more as needed)
   async del(key: string): Promise<number> {
     return this.redis.del(key);
   }
@@ -37,13 +36,11 @@ export class RedisInitService implements OnModuleInit, OnModuleDestroy {
     return this.redis.persist(key);
   }
 
-  // Called when the module is initialized
   onModuleInit() {
     console.log('Redis client connected');
   }
 
-  // Called when the module is destroyed
   onModuleDestroy() {
-    this.redis.quit(); // Properly close the Redis connection when the app stops
+    this.redis.quit();
   }
 }

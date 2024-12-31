@@ -13,7 +13,6 @@ Content-Type: application/json
 {
     "title":"bookstore",
     "priority":1
-
 }
 
 ####
@@ -25,3 +24,9 @@ Content-Type: application/json
     "priority":null
 
 }
+
+###
+
+DELETE {{baseURL}}/2
+Content-Type: application/json
+

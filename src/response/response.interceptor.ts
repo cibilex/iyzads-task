@@ -52,7 +52,7 @@ export class ResponseInterceptor<T>
       reqBody: body,
       url,
       ip,
-      userId: user?.id,
+      userId: user?.userId,
       method,
       responseTime: Math.round(res.elapsedTime),
     });

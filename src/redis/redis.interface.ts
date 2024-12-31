@@ -1,3 +1,5 @@
+import { UserTypes } from 'src/user/user.interface';
+
 export enum RedisKeys {
   ALL_PERMISSIONS = 'all_permissions',
   ACCESS_TOKEN = 'access_token',
@@ -21,4 +23,5 @@ export interface RedisAccessToken {
   permissions: Record<string, number>;
   rememberMe: boolean;
   createdAt: number;
+  userType: UserTypes;
 }

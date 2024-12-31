@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
@@ -11,8 +11,9 @@ import { Response } from 'src/helpers/utils';
 import { GlobalException } from 'src/global/global.filter';
 import { RedisService } from 'src/redis/redis.service';
 import { CommonTableStatuses } from 'src/typings/common';
+import { UserTypes } from './user.interface';
 @Injectable()
-export class UserService {
+export class UserService implements OnModuleInit {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly configService: ConfigService<EnvType, true>,
@@ -68,7 +69,7 @@ export class UserService {
         ...where,
         status: Not(CommonTableStatuses.DELETED),
       },
-      select: ['password', 'status', 'id', 'type', 'createdAt'],
+      select: ['password', 'status', 'id', 'type', 'createdAt', 'permissions'],
     });
     if (!user)
       throw new GlobalException('errors.not_found', {
@@ -102,5 +103,31 @@ export class UserService {
       }
     }
     return newPerm;
+  }
+
+  async onModuleInit() {
+    const username = this.configService.get('ADMIN_USERNAME', { infer: true });
+    const exists = await this.userRepository.existsBy({
+      username,
+    });
+    if (exists) {
+      console.info('Admin  exists');
+
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(
+      this.configService.get('ADMIN_PASSWORD', { infer: true }),
+      this.configService.get('BCRYPT_SALT', { infer: true }),
+    );
+
+    await this.userRepository.save(
+      this.userRepository.create({
+        username,
+        password: hashedPassword,
+        type: UserTypes.ADMIN,
+      }),
+    );
+    console.info('Admin user inserted');
   }
 }
