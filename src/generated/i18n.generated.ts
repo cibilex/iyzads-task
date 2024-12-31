@@ -62,6 +62,8 @@ export type I18nTranslations = {
         "user": string;
         "permission": string;
         "permission_page": string;
+        "bookstore": string;
+        "book": string;
     };
 };
 /* prettier-ignore */

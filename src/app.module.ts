@@ -11,6 +11,7 @@ import { I18nModule } from './i18n/i18n.module';
 import { RedisModule } from './redis/redis.module';
 import { PermissionsModule } from './permissions/permissions.module';
 import { PermissionItemModule } from './permission-item/permission-item.module';
+import { BookstoreModule } from './bookstore/bookstore.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PermissionItemModule } from './permission-item/permission-item.module';
     RedisModule,
     PermissionsModule,
     PermissionItemModule,
+    BookstoreModule,
   ],
   controllers: [AppController],
   providers: [

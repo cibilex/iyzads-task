@@ -80,6 +80,7 @@ export class PermissionItemService {
         },
       });
     }
+    // should remove user perms
 
     return new Response(true, 'success.deleted', {
       property: 'words.permission',

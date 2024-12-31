@@ -1,0 +1,25 @@
+@baseURL = http://localhost:2313/api/v1/bookstore
+@token=60717570d725a90bc87eff4a1f4f0dac490e532546def7ce9534770fa9dcefc3d20ca3c43767f5e6c75479c92b5befaa
+
+GET {{baseURL}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+
+##########
+POST {{baseURL}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title":"Ankara kitapevi",
+    "country":"TR",
+    "city":"Ankara"
+}
+
+####
+
+DELETE {{baseURL}}/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
