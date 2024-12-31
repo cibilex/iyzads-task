@@ -17,7 +17,7 @@ export class PermissionItemService {
     private readonly permissionRepository: Repository<Permission>,
   ) {}
 
-  async getPermissions() {
+  async list() {
     return this.permissionItemRepository.find({
       where: {
         status: Not(CommonTableStatuses.DELETED),
@@ -28,7 +28,7 @@ export class PermissionItemService {
     });
   }
 
-  async createPermission(
+  async create(
     permissionId: number,
     { title, priority }: CreatePermissionItemDto,
   ) {
@@ -63,7 +63,7 @@ export class PermissionItemService {
     });
   }
 
-  async deletePermission(permissionId: number, id: number) {
+  async delete(permissionId: number, id: number) {
     const result = await this.permissionItemRepository.update(
       {
         id,
@@ -86,7 +86,7 @@ export class PermissionItemService {
     });
   }
 
-  async updatePermission(
+  async update(
     permissionId: number,
     id: number,
     { title, priority }: CreatePermissionItemDto,

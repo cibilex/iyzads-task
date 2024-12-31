@@ -15,7 +15,7 @@ export class PermissionItem extends BaseEntity {
   @Column()
   value: number;
 
-  @Column({ type: 'int', nullable: false })
+  @Column({ type: 'int', nullable: false, name: 'permission_id' })
   permissionId: number;
 
   @ManyToOne(() => Permission, (permission) => permission.permissionItems)

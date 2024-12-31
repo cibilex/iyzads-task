@@ -2,6 +2,7 @@ import { PathImpl2 } from '@nestjs/config';
 import { FastifyRequest } from 'fastify';
 import { I18nTranslations } from 'src/generated/i18n.generated';
 import { GlobalException } from 'src/global/global.filter';
+import { User } from 'src/user/entity/user.entity';
 
 export function snakeCase(input: string): string {
   return input
@@ -10,24 +11,24 @@ export function snakeCase(input: string): string {
 }
 
 export const getUnusedBitValue = (list: number[]) => {
-  for (let index = 0; index < 32; index++) {
+  for (let index = 0; index < 31; index++) {
     const value = 2 ** index;
+
     const has = list.filter((xx) => xx === value);
     if (!has.length) return value;
   }
   throw new GlobalException('errors.max_permission');
 };
 
-export class Response {
-  constructor(
-    public data: any,
-    public message: PathImpl2<I18nTranslations> = 'success.completed',
-    public args?: {
-      property?: PathImpl2<I18nTranslations>;
-      [key: string]: any;
-    },
-  ) {}
-}
+export const groupArr = <T>(data: T[], length: number): Array<User[]> => {
+  const group: any[] = [];
+  for (let i = 0, j = 0; i < data.length; i++) {
+    if (i >= length && i % length === 0) j++;
+    group[j] = group[j] || [];
+    group[j].push(data[i]);
+  }
+  return group;
+};
 
 export const getIpAddress = function (req: FastifyRequest): string {
   const cfConnectingIp = req.headers['cf-connecting-ip'];
@@ -46,3 +47,14 @@ export const getIpAddress = function (req: FastifyRequest): string {
 
   return req.ip;
 };
+
+export class Response {
+  constructor(
+    public data: any,
+    public message: PathImpl2<I18nTranslations> = 'success.completed',
+    public args?: {
+      property?: PathImpl2<I18nTranslations>;
+      [key: string]: any;
+    },
+  ) {}
+}

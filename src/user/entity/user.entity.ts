@@ -22,7 +22,9 @@ export class User extends BaseEntity {
   })
   password: string;
 
-  @Column('jsonb')
+  @Column('jsonb', {
+    default: {},
+  })
   permissions: Record<string, number>;
 
   @OneToOne(() => Setting, (setting) => setting.user)

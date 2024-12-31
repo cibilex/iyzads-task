@@ -19,7 +19,7 @@ export class PermissionItemController {
 
   @Get()
   getPermissions() {
-    return this.permissionItemService.getPermissions();
+    return this.permissionItemService.list();
   }
 
   @Post(':permissionId')
@@ -27,7 +27,7 @@ export class PermissionItemController {
     @Param('permissionId', ParseIntPipe) permissionId: number,
     @Body() body: CreatePermissionItemDto,
   ) {
-    return this.permissionItemService.createPermission(permissionId, body);
+    return this.permissionItemService.create(permissionId, body);
   }
 
   @Put(':permissionId/:id')
@@ -36,7 +36,7 @@ export class PermissionItemController {
     @Param('id', ParseIntPipe) id: number,
     @Body() body: CreatePermissionItemDto,
   ) {
-    return this.permissionItemService.updatePermission(permissionId, id, body);
+    return this.permissionItemService.update(permissionId, id, body);
   }
 
   @Delete(':permissionId/:id')
@@ -44,6 +44,6 @@ export class PermissionItemController {
     @Param('permissionId', ParseIntPipe) permissionId: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.permissionItemService.deletePermission(permissionId, id);
+    return this.permissionItemService.delete(permissionId, id);
   }
 }

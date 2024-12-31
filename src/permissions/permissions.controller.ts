@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -18,12 +19,12 @@ export class PermissionsController {
 
   @Post()
   createPermission(@Body() body: CreatePermissionDto) {
-    return this.permissionService.createPermission(body);
+    return this.permissionService.create(body);
   }
 
   @Get()
   getPermissions() {
-    return this.permissionService.getPermissions();
+    return this.permissionService.list();
   }
 
   @Put(':id')
@@ -31,6 +32,11 @@ export class PermissionsController {
     @Param('id', ParseIntPipe) id: number,
     @Body() body: CreatePermissionDto,
   ) {
-    return this.permissionService.updatePermission(id, body);
+    return this.permissionService.update(id, body);
+  }
+
+  @Delete(':id')
+  deletePermission(@Param('id', ParseIntPipe) id: number) {
+    return this.permissionService.delete(id);
   }
 }

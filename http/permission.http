@@ -11,17 +11,17 @@ POST {{baseURL}}
 Content-Type: application/json
 
 {
-    "title":" world",
-    "priority":10
+    "title":"bookstore",
+    "priority":1
 
 }
 
 ####
-PUT {{baseURL}}/5
+PUT {{baseURL}}/6
 Content-Type: application/json
 
 {
-    "title":"world 1x2",
-    "priority":1120
+    "title":"bookstore",
+    "priority":null
 
 }

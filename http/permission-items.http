@@ -7,27 +7,27 @@ Content-Type: application/json
 
 
 ##########
-POST {{baseURL}}/2
+POST {{baseURL}}/1
 Content-Type: application/json
 
 {
-    "title":"woasras21xld22xxxxasdasdsad",
-    "priority":1
+    "title":"move",
+    "priority":4
 }
 
 ####
-PUT {{baseURL}}/10/111
+PUT {{baseURL}}/6/46
 Content-Type: application/json
 
 {
-    "title":"world asdasd",
+    "title":"move",
     "priority":1120
 
 }
 
 
 ####
-DELETE {{baseURL}}/2/12
+DELETE {{baseURL}}/6/46
 Content-Type: application/json
 
 
