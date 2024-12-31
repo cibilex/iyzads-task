@@ -17,14 +17,14 @@ import { Public } from 'src/public/public.decorator';
 export class PermissionsController {
   constructor(private readonly permissionService: PermissionsService) {}
 
+  @Get()
+  getPermissions() {
+    return this.permissionService.list(true);
+  }
+
   @Post()
   createPermission(@Body() body: CreatePermissionDto) {
     return this.permissionService.create(body);
-  }
-
-  @Get()
-  getPermissions() {
-    return this.permissionService.list();
   }
 
   @Put(':id')

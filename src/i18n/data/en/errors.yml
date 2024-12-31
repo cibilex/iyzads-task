@@ -18,3 +18,4 @@ not_verified: The user is not verified yet.
 already_logged: The user is already logged in.
 passwordIsNotValid: Entered password is not valid.
 max_permission: 'Up to 32 permissions can be added for a page.'
+perm_structure_invalid: 'Permission structure is invalid.'

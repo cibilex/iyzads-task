@@ -1,7 +1,7 @@
 import { BaseEntity } from 'src/entity/base.entity';
-import { Column, Entity, Index, OneToOne } from 'typeorm';
-import { Setting } from './setting.entity';
+import { Column, Entity, Index } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { UserTypes } from '../user.interface';
 
 @Entity('users')
 export class User extends BaseEntity {
@@ -13,6 +13,13 @@ export class User extends BaseEntity {
     length: 50,
   })
   username: string;
+
+  @Column({
+    type: 'enum',
+    enum: UserTypes,
+    default: UserTypes.USER,
+  })
+  type: UserTypes;
 
   @Exclude()
   @Column({
@@ -26,7 +33,4 @@ export class User extends BaseEntity {
     default: {},
   })
   permissions: Record<string, number>;
-
-  @OneToOne(() => Setting, (setting) => setting.user)
-  setting: Setting;
 }

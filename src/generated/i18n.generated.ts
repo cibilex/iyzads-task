@@ -26,6 +26,7 @@ export type I18nTranslations = {
         "already_logged": string;
         "passwordIsNotValid": string;
         "max_permission": string;
+        "perm_structure_invalid": string;
     };
     "success": {
         "completed": string;

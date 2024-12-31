@@ -70,6 +70,19 @@ class Env {
 
   @IsNumber()
   REDIS_PORT: number;
+
+  @IsNumber()
+  REDIS_COMMON_TTL: number;
+
+  @IsNumber()
+  REDIS_ACCESS_TOKEN_REMEMBER_ME_TTL: number;
+
+  @IsNumber()
+  REDIS_ACCESS_TOKEN_TTL: number;
+
+  @IsString()
+  @MinLength(10)
+  REDIS_ACCESS_TOKEN_SECRET: string;
 }
 
 export default function (config: Record<string, unknown>) {
@@ -97,6 +110,10 @@ export default function (config: Record<string, unknown>) {
     REDIS_HOST,
     REDIS_PORT,
     REDIS_PASSWORD,
+    REDIS_COMMON_TTL,
+    REDIS_ACCESS_TOKEN_SECRET,
+    REDIS_ACCESS_TOKEN_REMEMBER_ME_TTL,
+    REDIS_ACCESS_TOKEN_TTL,
   } = parsed;
 
   return {
@@ -119,6 +136,10 @@ export default function (config: Record<string, unknown>) {
       REDIS_HOST,
       REDIS_PORT,
       REDIS_PASSWORD,
+      REDIS_COMMON_TTL,
+      REDIS_ACCESS_TOKEN_SECRET,
+      REDIS_ACCESS_TOKEN_REMEMBER_ME_TTL,
+      REDIS_ACCESS_TOKEN_TTL,
     },
   };
 }

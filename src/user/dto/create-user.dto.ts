@@ -1,11 +1,4 @@
-import {
-  IsNumber,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-  MinLength,
-} from 'class-validator';
+import { IsObject, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -18,18 +11,6 @@ export class CreateUserDto {
   @MaxLength(32)
   password: string;
 
-  @IsNumber()
-  @Min(1900)
-  @Max(2015)
-  birthYear: number;
-
-  @IsString()
-  @MinLength(11)
-  @MaxLength(11)
-  phone: string;
-
-  @IsString()
-  @MinLength(2)
-  @MaxLength(4)
-  country: string;
+  @IsObject()
+  permissions: Record<string, number[]>;
 }

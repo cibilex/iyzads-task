@@ -6,7 +6,6 @@ import { CreatePermissionDto } from './dto/create-permission.dto';
 import { GlobalException } from 'src/global/global.filter';
 import { groupArr, Response } from 'src/helpers/utils';
 import { CommonTableStatuses } from 'src/typings/common';
-import { ModuleRef } from '@nestjs/core';
 import { User } from 'src/user/entity/user.entity';
 import { PermissionItem } from 'src/permission-item/entity/permission-item.entity.dto';
 
@@ -16,10 +15,25 @@ export class PermissionsService {
     @InjectRepository(Permission)
     private readonly permissionRepository: Repository<Permission>,
     private readonly entityManager: EntityManager,
-    private readonly moduleRef: ModuleRef,
   ) {}
 
-  async list() {
+  async list(dense?: boolean) {
+    const q = this.permissionRepository
+      .createQueryBuilder('p')
+      .leftJoinAndSelect('p.permissionItems', 'pi', 'pi.status != :piStatus', {
+        piStatus: CommonTableStatuses.DELETED,
+      })
+      .where('p.status != :status', {
+        status: CommonTableStatuses.DELETED,
+      });
+    if (dense) {
+      q.select(['p.id', 'p.title', 'pi.id', 'pi.title', 'pi.value']);
+    }
+
+    return q.orderBy('p.createdAt', 'DESC').getMany();
+  }
+
+  async getDenseList() {
     return this.permissionRepository.find({
       where: {
         status: Not(CommonTableStatuses.DELETED),
@@ -29,6 +43,15 @@ export class PermissionsService {
       },
       relations: {
         permissionItems: true,
+      },
+      select: {
+        id: true,
+        title: true,
+        permissionItems: {
+          id: true,
+          title: true,
+          value: true,
+        },
       },
     });
   }
@@ -137,7 +160,7 @@ export class PermissionsService {
     }
   }
 
-  async modifyExistingUsers(
+  private async modifyExistingUsers(
     trx: EntityManager,
     payload: { val?: number; page: string },
     del = false,
