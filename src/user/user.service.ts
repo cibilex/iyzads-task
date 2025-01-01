@@ -49,6 +49,29 @@ export class UserService implements OnModuleInit {
     return new Response(true, 'success.registered');
   }
 
+  async profile(id: number) {
+    const [allPermissions, user] = await Promise.all([
+      this.redisService.getPermissions(),
+      await this.userRepository.findOne({
+        where: {
+          id,
+          status: Not(CommonTableStatuses.DELETED),
+        },
+        select: ['username', 'type', 'permissions'],
+      }),
+    ]);
+
+    return new Response({
+      ...user,
+      allPermissions,
+    });
+  }
+
+  async logout(token: string) {
+    await this.redisService.delAccessToken(token);
+    return new Response(true, 'success.logged_out');
+  }
+
   async login({ username, password, rememberMe }: LoginUserDto) {
     const user = await this.getUser({ username });
 

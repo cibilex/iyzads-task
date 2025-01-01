@@ -11,7 +11,7 @@ import {
 import { ModuleRef } from '@nestjs/core';
 import { createToken, formatPermissions } from 'src/helpers/utils';
 import { toUnixTime } from 'src/helpers/date';
-import { EntityManager } from 'typeorm';
+import { EntityManager, Not } from 'typeorm';
 import { UserVerification } from 'src/user/entity/user-verification.entity';
 import { CommonTableStatuses } from 'src/typings/common';
 import { UserTypes } from 'src/user/user.interface';
@@ -179,6 +179,17 @@ export class RedisService implements OnModuleInit {
       +this.configService.get('REDIS.REDIS_COMMON_TTL', { infer: true }),
     );
     return true;
+  }
+
+  async delAccessToken(token: string) {
+    await Promise.all([
+      this.redisInitService.del(this.getKey(RedisKeys.ACCESS_TOKEN, token)),
+      this.entityManager.update(
+        UserVerification,
+        { token, status: Not(CommonTableStatuses.ACTIVE) },
+        { status: CommonTableStatuses.DELETED },
+      ),
+    ]);
   }
 
   async onModuleInit() {
