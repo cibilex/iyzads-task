@@ -6,7 +6,7 @@ export class BookStore extends BaseEntity {
   @Index()
   @Column({
     type: 'varchar',
-    length: '100',
+    length: '80',
   })
   title: string;
 

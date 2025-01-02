@@ -2,8 +2,8 @@ import { IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateBookStoreDto {
   @IsString()
-  @MinLength(2)
-  @MaxLength(100)
+  @MinLength(4)
+  @MaxLength(80)
   title: string;
 
   @IsString()
