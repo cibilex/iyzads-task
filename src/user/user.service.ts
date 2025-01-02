@@ -20,7 +20,18 @@ export class UserService implements OnModuleInit {
     private readonly redisService: RedisService,
   ) {}
 
-  async createUser(data: CreateUserDto) {
+  async list(id: number) {
+    const users = await this.userRepository.find({
+      where: {
+        status: Not(CommonTableStatuses.DELETED),
+        id: Not(id),
+      },
+    });
+
+    return new Response(users);
+  }
+
+  async create(data: CreateUserDto) {
     const { username, password } = data;
     const exists = await this.userRepository.existsBy({ username });
     if (exists) {
@@ -38,7 +49,7 @@ export class UserService implements OnModuleInit {
       this.configService.get('BCRYPT_SALT', { infer: true }),
     );
 
-    await this.userRepository.save(
+    const user = await this.userRepository.save(
       this.userRepository.create({
         username,
         password: hashedPassword,
@@ -46,7 +57,7 @@ export class UserService implements OnModuleInit {
       }),
     );
 
-    return new Response(true, 'success.registered');
+    return new Response(user, 'success.registered');
   }
 
   async profile(id: number) {
@@ -151,6 +162,5 @@ export class UserService implements OnModuleInit {
         type: UserTypes.ADMIN,
       }),
     );
-    console.info('Admin user inserted');
   }
 }

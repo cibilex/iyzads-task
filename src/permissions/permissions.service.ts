@@ -246,17 +246,19 @@ export class PermissionsService implements OnModuleInit {
           if (!exists) {
             const value = getUnusedBitValue(list.map((cell) => cell.value));
 
-            await trx.save(
+            const item = await trx.save(
               this.permissionItemRepository.create({
                 title: permission,
                 permissionId: page.id,
                 value,
               }),
             );
+            list.push(item);
           }
         }
       }
     });
+    await this.redisService.setPermissions();
     console.info('permissions initialized');
   }
 }

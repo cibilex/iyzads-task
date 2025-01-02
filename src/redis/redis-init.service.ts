@@ -37,7 +37,7 @@ export class RedisInitService implements OnModuleInit, OnModuleDestroy {
   }
 
   onModuleInit() {
-    console.log('Redis client connected');
+    console.info('Redis client connected');
   }
 
   onModuleDestroy() {

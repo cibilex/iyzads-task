@@ -194,6 +194,6 @@ export class RedisService implements OnModuleInit {
 
   async onModuleInit() {
     await this.setPermissions();
-    console.log('Redis permissions updated');
+    console.info('Redis permissions updated');
   }
 }

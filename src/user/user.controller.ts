@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Header,
-  Post,
-  Query,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -18,10 +10,16 @@ import { FastifyRequest } from 'fastify';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Auth(['user.list'])
+  @Get()
+  list(@RUser('userId') id: number) {
+    return this.userService.list(id);
+  }
+
   @Auth(['user.create'])
   @Post()
-  createUser(@Body() body: CreateUserDto) {
-    return this.userService.createUser(body);
+  create(@Body() body: CreateUserDto) {
+    return this.userService.create(body);
   }
 
   @Get('profile')
