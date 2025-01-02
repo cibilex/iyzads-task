@@ -26,6 +26,9 @@ export class UserService implements OnModuleInit {
         status: Not(CommonTableStatuses.DELETED),
         id: Not(id),
       },
+      order: {
+        createdAt: 'DESC',
+      },
     });
 
     return new Response(users);

@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Not, Repository } from 'typeorm';
+import { EntityManager, FindOptionsWhere, Not, Repository } from 'typeorm';
 import { CommonTableStatuses } from 'src/typings/common';
 import { GlobalException } from 'src/global/global.filter';
 import { convertPrice, Response } from 'src/helpers/utils';
 import { Book } from './entity/book.entity';
 import { CreateBookDto } from './dto/create-book.dto';
+import { Inventory } from 'src/inventory/entity/inventory.entity';
 
 @Injectable()
 export class BookService {
   constructor(
     @InjectRepository(Book)
     private readonly bookRepository: Repository<Book>,
+    private readonly entityManager: EntityManager,
   ) {}
 
   async list() {
@@ -25,14 +27,13 @@ export class BookService {
     });
   }
 
-  async create({ title, description, price, publicationDate }: CreateBookDto) {
+  async create({ title, description, price }: CreateBookDto) {
     await this.throwIfExists({ title });
     const bookstore = await this.bookRepository.save(
       this.bookRepository.create({
         title,
         description,
         price: convertPrice(price),
-        publicationDate,
       }),
     );
     return new Response(bookstore, 'success.created', {
@@ -41,19 +42,33 @@ export class BookService {
   }
 
   async delete(id: number) {
-    const result = await this.bookRepository.update(
-      { id, status: Not(CommonTableStatuses.DELETED) },
-      this.bookRepository.create({
-        status: CommonTableStatuses.DELETED,
-      }),
-    );
-    if (!result.affected) {
-      throw new GlobalException('errors.not_found', {
-        args: {
-          property: 'words.book',
+    await this.entityManager.transaction(async (trx) => {
+      const res = await trx.update(
+        Book,
+        { id, status: Not(CommonTableStatuses.DELETED) },
+        this.bookRepository.create({
+          status: CommonTableStatuses.DELETED,
+        }),
+      );
+      if (!res.affected) {
+        throw new GlobalException('errors.not_found', {
+          args: {
+            property: 'words.book',
+          },
+        });
+      }
+
+      await trx.update(
+        Inventory,
+        {
+          bookId: id,
+          status: Not(CommonTableStatuses.DELETED),
         },
-      });
-    }
+        trx.getRepository(Inventory).create({
+          status: CommonTableStatuses.DELETED,
+        }),
+      );
+    });
 
     return new Response(true, 'success.deleted', {
       property: 'words.book',

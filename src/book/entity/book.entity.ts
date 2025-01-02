@@ -15,12 +15,6 @@ export class Book extends BaseEntity {
   })
   description: string;
 
-  @Column({
-    type: 'int',
-    name: 'publication_date',
-  })
-  publicationDate: number;
-
   @Index()
   @Column()
   price: number;

@@ -14,7 +14,6 @@ Authorization: Bearer {{token}}
 {
     "title":"Sapxiens",
     "description":"Sapiens description",
-    "publicationDate":1735653030,
     "price":23
 }
 
