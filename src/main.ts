@@ -34,7 +34,7 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: ['https://iiyzads-task.netlify.app'],
+    origin: ['https://iiyzads-task.netlify.app', 'http://iyzads_task.surge.sh'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
   });
 
