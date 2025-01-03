@@ -1,73 +1,62 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Test-Pro: Full Stack Application
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+. The backend is built with NestJS using Fastify as the HTTP framework, PostgreSQL as the database, and Redis for caching. The project uses TypeORM for database mappings, and Swagger is included for providing APIs to the frontend.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tables
 
-## Description
+- **Books**: Manage book details such as title, description, and price.
+- **Bookstores**: Manage bookstores' information such as title, country, and city.
+- **Users,user_verifications**: Manage user accounts with permissions.
+- **Permissions,permission_items**: Includes permissions logic.
+- **Inventory**: Track the quantity of books available in bookstores.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tech Stack
 
-## Installation
+- **Backend**: NestJS, Fastify
+- **Database**: PostgreSQL
+- **Caching**: Redis
+- **ORM**: TypeORM
+- **API Documentation**: Swagger
+- **Authentication**: Session authorization logic
+- **Code Formatting**: Prettier, ESLint
+- **Commit Formatting**: Commitizen with husky
 
-```bash
-$ npm install
-```
+## Setup Instructions
 
-## Running the app
+### 1. Clone the Repository
+
+Clone the repository to your local machine:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone git@github.com:cibilex/iyzads-task.git
+cd iyzads-task
 ```
 
-## Test
+### 2. Install Dependencies
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm install
 ```
 
-## Support
+### 3. Install Docker containers
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- you can set up PostgreSQL and Redis containers using the docker-compose.yml file in the project directory:
 
-## Stay in touch
+```bash
+docker compose up -d
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 3.Set up your environment variables and running the project:
 
-## License
+1. Create a .env.dev file for development configuration : `npm run start:dev`
+2. Create a .env.prod file for production configuration: `npm run start:prod`
+   he project uses the `@nestjs/config ` library, which automatically loads environment variables based on the NODE_ENV variable.
 
-Nest is [MIT licensed](LICENSE).
+# Notes
+
+1. The application automatically creates an Admin user on startup if one does not exist. The Admin credentials are read from the environment files.
+
+
+### Frontend Link
+[link](https://iiyzads-task.netlify.app): https://iiyzads-task.netlify.app          
+frontend github [link](https://github.com/cibilex/iyzads-task-front) : https://github.com/cibilex/iyzads-task-front
