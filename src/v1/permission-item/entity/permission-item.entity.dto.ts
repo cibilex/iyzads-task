@@ -1,5 +1,5 @@
 import { BaseEntity } from 'src/entity/base.entity';
-import { Permission } from 'src/permissions/entity/permission.entity';
+import { Permission } from 'src/v1/permissions/entity/permission.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('permission_items')

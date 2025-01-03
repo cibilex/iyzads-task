@@ -5,8 +5,8 @@ import { CommonTableStatuses } from 'src/typings/common';
 import { GlobalException } from 'src/global/global.filter';
 import { Response } from 'src/helpers/utils';
 import { Inventory } from './entity/inventory.entity';
-import { Book } from 'src/book/entity/book.entity';
-import { BookStore } from 'src/bookstore/entity/bookstore.entity';
+import { Book } from 'src/v1/book/entity/book.entity';
+import { BookStore } from 'src/v1/bookstore/entity/bookstore.entity';
 
 @Injectable()
 export class InventoryService {

@@ -3,9 +3,9 @@ import { HashOptions, createHash } from 'crypto';
 import { FastifyRequest } from 'fastify';
 import { I18nTranslations } from 'src/generated/i18n.generated';
 import { GlobalException } from 'src/global/global.filter';
-import { Permission } from 'src/permissions/entity/permission.entity';
+import { Permission } from 'src/v1/permissions/entity/permission.entity';
 import { RedisAllPermissions } from 'src/redis/redis.interface';
-import { User } from 'src/user/entity/user.entity';
+import { User } from 'src/v1/user/entity/user.entity';
 
 export function snakeCase(input: string): string {
   return input

@@ -1,4 +1,4 @@
-import { UserTypes } from 'src/user/user.interface';
+import { UserTypes } from 'src/v1/user/user.interface';
 
 export enum RedisKeys {
   ALL_PERMISSIONS = 'all_permissions',

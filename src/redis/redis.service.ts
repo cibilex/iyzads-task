@@ -12,11 +12,11 @@ import { ModuleRef } from '@nestjs/core';
 import { createToken, formatPermissions } from 'src/helpers/utils';
 import { toUnixTime } from 'src/helpers/date';
 import { EntityManager, Not } from 'typeorm';
-import { UserVerification } from 'src/user/entity/user-verification.entity';
+import { UserVerification } from 'src/v1/user/entity/user-verification.entity';
 import { CommonTableStatuses } from 'src/typings/common';
-import { UserTypes } from 'src/user/user.interface';
+import { UserTypes } from 'src/v1/user/user.interface';
 import { RedisStringService } from './redis-strings.service';
-import { Permission } from 'src/permissions/entity/permission.entity';
+import { Permission } from 'src/v1/permissions/entity/permission.entity';
 
 @Injectable()
 export class RedisService implements OnModuleInit {

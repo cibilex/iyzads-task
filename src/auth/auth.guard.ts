@@ -11,7 +11,7 @@ import { FastifyRequest } from 'fastify';
 import { Auth, Public } from 'src/public/public.decorator';
 import { toUnixTime } from 'src/helpers/date';
 import { RedisService } from 'src/redis/redis.service';
-import { UserTypes } from 'src/user/user.interface';
+import { UserTypes } from 'src/v1/user/user.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

@@ -1,5 +1,5 @@
-import { Book } from 'src/book/entity/book.entity';
-import { BookStore } from 'src/bookstore/entity/bookstore.entity';
+import { Book } from 'src/v1/book/entity/book.entity';
+import { BookStore } from 'src/v1/bookstore/entity/bookstore.entity';
 import { BaseEntity } from 'src/entity/base.entity';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 

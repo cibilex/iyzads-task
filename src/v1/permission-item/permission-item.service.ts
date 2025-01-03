@@ -6,10 +6,10 @@ import { CreatePermissionItemDto } from './dto/create-permission-item.dto';
 import { CommonTableStatuses } from 'src/typings/common';
 import { GlobalException } from 'src/global/global.filter';
 import { getUnusedBitValue, Response } from 'src/helpers/utils';
-import { Permission } from 'src/permissions/entity/permission.entity';
+import { Permission } from 'src/v1/permissions/entity/permission.entity';
 import { UpdatePermissionItemDto } from './dto/update-permission-item.dto';
 import { ModuleRef } from '@nestjs/core';
-import { PermissionsService } from 'src/permissions/permissions.service';
+import { PermissionsService } from 'src/v1/permissions/permissions.service';
 import { RedisService } from 'src/redis/redis.service';
 
 @Injectable()
