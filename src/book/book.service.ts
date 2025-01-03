@@ -1,6 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, FindOptionsWhere, Not, Repository } from 'typeorm';
+import {
+  EntityManager,
+  FindManyOptions,
+  FindOptions,
+  FindOptionsSelect,
+  FindOptionsWhere,
+  Not,
+  Repository,
+} from 'typeorm';
 import { CommonTableStatuses } from 'src/typings/common';
 import { GlobalException } from 'src/global/global.filter';
 import { convertPrice, Response } from 'src/helpers/utils';
@@ -16,15 +24,24 @@ export class BookService {
     private readonly entityManager: EntityManager,
   ) {}
 
-  async list() {
-    return this.bookRepository.find({
+  async list(dense?: boolean) {
+    const findOptions: FindManyOptions<Book> = {
       where: {
         status: Not(CommonTableStatuses.DELETED),
       },
       order: {
         createdAt: 'DESC',
       },
-    });
+    };
+
+    if (dense) {
+      findOptions.select = {
+        id: true,
+        title: true,
+      };
+    }
+
+    return this.bookRepository.find(findOptions);
   }
 
   async create({ title, description, price }: CreateBookDto) {

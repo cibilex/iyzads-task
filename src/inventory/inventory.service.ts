@@ -1,11 +1,10 @@
-import { Global, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsWhere, Not, Repository } from 'typeorm';
 import { CommonTableStatuses } from 'src/typings/common';
 import { GlobalException } from 'src/global/global.filter';
-import { convertPrice, Response } from 'src/helpers/utils';
+import { Response } from 'src/helpers/utils';
 import { Inventory } from './entity/inventory.entity';
-import { CreateInventoryDto } from './dto/create-inventory.dto';
 import { Book } from 'src/book/entity/book.entity';
 import { BookStore } from 'src/bookstore/entity/bookstore.entity';
 
@@ -20,23 +19,45 @@ export class InventoryService {
     private readonly bookstoreRepository: Repository<BookStore>,
   ) {}
 
-  async list() {
-    return this.inventoryRepository.find({
-      where: {
+  async list(id?: number) {
+    const where: FindOptionsWhere<Inventory> = {
+      status: Not(CommonTableStatuses.DELETED),
+      bookstore: {
         status: Not(CommonTableStatuses.DELETED),
-        bookstore: {
-          status: Not(CommonTableStatuses.DELETED),
-        },
-        book: {
-          status: Not(CommonTableStatuses.DELETED),
-        },
       },
+      book: {
+        status: Not(CommonTableStatuses.DELETED),
+      },
+    };
+    if (id) {
+      where.id = id;
+    }
+
+    return this.inventoryRepository.find({
+      where,
       order: {
         createdAt: 'DESC',
       },
       relations: {
         bookstore: true,
         book: true,
+      },
+      select: {
+        id: true,
+        quantity: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        bookstore: {
+          id: true,
+          country: true,
+          title: true,
+        },
+        book: {
+          id: true,
+          title: true,
+          price: true,
+        },
       },
     });
   }
@@ -48,15 +69,16 @@ export class InventoryService {
     ]);
 
     await this.throwIfExists({ bookstoreId, bookId });
-    const bookstore = await this.inventoryRepository.save(
+    const res = await this.inventoryRepository.save(
       this.inventoryRepository.create({
         bookstoreId,
         bookId,
         quantity,
       }),
     );
+    const inventories = await this.list(res.id);
 
-    return new Response(bookstore, 'success.created', {
+    return new Response(inventories[0], 'success.created', {
       property: 'words.inventory',
     });
   }
@@ -86,8 +108,8 @@ export class InventoryService {
       });
     }
 
-    return new Response(true, 'success.deleted', {
-      property: 'words.book',
+    return new Response(true, 'success.updated', {
+      property: 'words.inventory',
     });
   }
 
@@ -111,7 +133,7 @@ export class InventoryService {
     }
 
     return new Response(true, 'success.deleted', {
-      property: 'words.book',
+      property: 'words.inventory',
     });
   }
 
@@ -123,7 +145,7 @@ export class InventoryService {
     if (!exists) {
       throw new GlobalException('errors.not_found', {
         args: {
-          property: 'words.book',
+          property: 'words.inventory',
         },
       });
     }

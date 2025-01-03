@@ -2,7 +2,7 @@ import { IsInt, Max, Min } from 'class-validator';
 
 export class CreateInventoryDto {
   @IsInt()
-  @Min(0)
+  @Min(1)
   @Max(100000)
   quantity: number;
 }

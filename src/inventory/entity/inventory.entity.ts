@@ -27,5 +27,5 @@ export class Inventory extends BaseEntity {
 
   @ManyToOne(() => BookStore)
   @JoinColumn({ name: 'bookstore_id' })
-  bookstore: Partial<Inventory>;
+  bookstore: Partial<BookStore>;
 }
