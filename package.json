@@ -29,6 +29,7 @@
     "@nestjs/mapped-types": "^2.0.6",
     "@nestjs/microservices": "^10.4.15",
     "@nestjs/platform-fastify": "^10.4.15",
+    "@nestjs/throttler": "^6.3.0",
     "@nestjs/typeorm": "^10.0.2",
     "@types/bcrypt": "^5.0.2",
     "bcrypt": "^5.1.1",

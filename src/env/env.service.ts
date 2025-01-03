@@ -18,6 +18,10 @@ class Env {
   MODE: Mode;
 
   @IsNumber()
+  @Min(1)
+  RATE_LIMIT: number;
+
+  @IsNumber()
   @Min(1000)
   PORT: number;
 
@@ -105,6 +109,7 @@ export default function (config: Record<string, unknown>) {
   const {
     PORT,
     MODE,
+    RATE_LIMIT,
     DB_TYPE,
     DB_PORT,
     DB_HOST,
@@ -130,6 +135,7 @@ export default function (config: Record<string, unknown>) {
   return {
     PORT,
     MODE,
+    RATE_LIMIT,
     BCRYPT_SALT,
     FALLBACK_LANGUAGE,
     ADMIN_PASSWORD,

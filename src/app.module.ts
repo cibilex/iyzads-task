@@ -1,7 +1,7 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import validate from './env/env.service';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
@@ -14,6 +14,8 @@ import { PermissionItemModule } from './permission-item/permission-item.module';
 import { BookstoreModule } from './bookstore/bookstore.module';
 import { BookModule } from './book/book.module';
 import { InventoryModule } from './inventory/inventory.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { EnvType } from './env/env.interface';
 
 @Module({
   imports: [
@@ -21,6 +23,15 @@ import { InventoryModule } from './inventory/inventory.module';
       envFilePath: `.env.${process.env.MODE}`,
       isGlobal: true,
       validate,
+    }),
+    ThrottlerModule.forRootAsync({
+      useFactory: (configService: ConfigService<EnvType, true>) => [
+        {
+          limit: configService.get('RATE_LIMIT', { infer: true }),
+          ttl: 60000,
+        },
+      ],
+      inject: [ConfigService],
     }),
     DbModule,
     I18nModule,
@@ -42,6 +53,10 @@ import { InventoryModule } from './inventory/inventory.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
