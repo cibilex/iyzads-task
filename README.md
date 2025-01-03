@@ -1,6 +1,6 @@
-# Test-Pro: Full Stack Application
+# Iyzads-task: Full Stack Application
 
-. The backend is built with NestJS using Fastify as the HTTP framework, PostgreSQL as the database, and Redis for caching. The project uses TypeORM for database mappings, and Swagger is included for providing APIs to the frontend.
+The backend is built with NestJS using Fastify as the HTTP framework, PostgreSQL as the database, and Redis for caching. The project uses TypeORM for database mappings, and Swagger is included for providing APIs to the frontend.
 
 ## Tables
 
