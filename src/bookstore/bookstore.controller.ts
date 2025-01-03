@@ -12,7 +12,9 @@ import { BookstoreService } from './bookstore.service';
 import { CreateBookStoreDto } from './dto/create-bookstore.dto';
 import { Auth } from 'src/public/public.decorator';
 import { ListBookstoreDto } from './dto/list-bookstore.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('bookstore')
 export class BookstoreController {
   constructor(private readonly bookStoreService: BookstoreService) {}

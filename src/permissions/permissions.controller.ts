@@ -10,10 +10,10 @@ import {
 } from '@nestjs/common';
 import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
-import { Public } from 'src/public/public.decorator';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
-@Public(true)
+@ApiBearerAuth()
 @Controller('permissions')
 export class PermissionsController {
   constructor(private readonly permissionService: PermissionsService) {}

@@ -28,6 +28,7 @@ export class AuthGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
+    console.log(req.headers.authorization, 'auth');
 
     const bearerToken = this.getBearerToken(req);
     if (!bearerToken) {

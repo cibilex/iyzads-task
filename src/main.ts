@@ -18,6 +18,7 @@ import { snakeCase } from './helpers/utils';
 import { ResponseInterceptor } from './response/response.interceptor';
 import redactions from './data/reductions';
 import { randomUUID } from 'crypto';
+import { addSwagger } from './lib/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -133,6 +134,7 @@ async function bootstrap() {
     infer: true,
   });
 
+  addSwagger(app);
   await app.listen(port, '0.0.0.0');
 }
 bootstrap();

@@ -1,6 +1,4 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import validate from './env/env.service';
@@ -43,9 +41,7 @@ import { EnvType } from './env/env.interface';
     BookModule,
     InventoryModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

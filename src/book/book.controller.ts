@@ -12,7 +12,9 @@ import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { Auth } from 'src/public/public.decorator';
 import { ListBookDto } from './dto/list-book.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth()
 @Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
