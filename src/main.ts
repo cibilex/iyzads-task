@@ -31,10 +31,12 @@ async function bootstrap() {
       genReqId: () => randomUUID(),
       disableRequestLogging: false,
     }),
-    {
-      cors: true,
-    },
   );
+
+  app.enableCors({
+    origin: ['https://iiyzads-task.netlify.app'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  });
 
   app.setGlobalPrefix('api');
   app.enableVersioning({
