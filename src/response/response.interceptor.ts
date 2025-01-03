@@ -40,7 +40,7 @@ export class ResponseInterceptor<T>
     response: any,
     err: any,
   ) {
-    const { log, body, url, user, method, headers, query, params } = req;
+    const { log, body, url, user, method } = req;
     const ip = getIpAddress(req);
 
     const responseData = (err && response) || undefined;

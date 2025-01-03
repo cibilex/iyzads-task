@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import {
   EntityManager,
   FindManyOptions,
-  FindOptions,
-  FindOptionsSelect,
   FindOptionsWhere,
   Not,
   Repository,

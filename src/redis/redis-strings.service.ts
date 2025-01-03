@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { RedisService } from './redis.service';
 import { RedisInitService } from './redis-init.service';
 
 @Injectable()

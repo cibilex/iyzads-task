@@ -1,4 +1,3 @@
-import fastify from 'fastify';
 import { RedisAccessToken } from 'src/redis/redis.interface';
 
 declare module 'fastify' {
