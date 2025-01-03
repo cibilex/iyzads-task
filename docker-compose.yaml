@@ -1,0 +1,26 @@
+version: '3'
+services:
+  postgresql:
+    container_name: iyzads-postgres
+    image: bitnami/postgresql:latest
+    environment:
+      - POSTGRESQL_USERNAME= ###
+      - POSTGRESQL_PASSWORD= ####
+      - POSTGRESQL_POSTGRES_PASSWORD= ####
+    volumes:
+      - iyzads-postgres:/bitnami/postgresql
+    ports:
+      - '5432:5432'
+  redis:
+    container_name: iyzads-redis
+    image: bitnami/redis:latest
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+      - REDIS_PASSWORD= ####
+    ports:
+      - '6379:6379'
+    volumes:
+      - iyzads-redis:/bitnami/redis/data
+volumes:
+  iyzads-postgres:
+  iyzads-redis:
