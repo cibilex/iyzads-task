@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EnvType, Mode } from './env/env.interface';
-import fastifyHelmet from '@fastify/helmet';
 import { getMetadataStorage, ValidationError } from 'class-validator';
 import { I18nContext } from 'nestjs-i18n';
 import { snakeCase } from './helpers/utils';
@@ -19,6 +18,8 @@ import { ResponseInterceptor } from './response/response.interceptor';
 import redactions from './data/reductions';
 import { randomUUID } from 'crypto';
 import { addSwagger } from './lib/swagger';
+
+console.log(process.env);
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -122,12 +123,14 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService<EnvType, true>);
 
+  console.log(process.env);
+
   const isDev =
-    configService.get('MODE', {
+    configService.get('NODE_ENV', {
       infer: true,
     }) === Mode.DEV;
   if (!isDev) {
-    app.use(fastifyHelmet);
+    // app.use(fastifyHelmet);
   }
 
   const port = configService.get('PORT', {

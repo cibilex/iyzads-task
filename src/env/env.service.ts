@@ -15,7 +15,7 @@ import { Languages } from 'src/typings/common';
 
 class Env {
   @IsEnum(Mode)
-  MODE: Mode;
+  NODE_ENV: Mode;
 
   @IsNumber()
   @Min(1)
@@ -99,6 +99,8 @@ class Env {
 }
 
 export default function (config: Record<string, unknown>) {
+  console.log(process.env, 'env');
+
   const parsed = plainToClass(Env, config, {
     enableImplicitConversion: true,
   });
@@ -108,7 +110,7 @@ export default function (config: Record<string, unknown>) {
 
   const {
     PORT,
-    MODE,
+    NODE_ENV,
     RATE_LIMIT,
     DB_TYPE,
     DB_PORT,
@@ -134,7 +136,7 @@ export default function (config: Record<string, unknown>) {
 
   return {
     PORT,
-    MODE,
+    NODE_ENV,
     RATE_LIMIT,
     BCRYPT_SALT,
     FALLBACK_LANGUAGE,
